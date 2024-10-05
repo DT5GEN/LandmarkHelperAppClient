@@ -1,15 +1,13 @@
 package com.dt5gen.landmarkhelperat2.ui
 
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme.typography
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Place
-import androidx.compose.material3.Text
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
@@ -28,7 +26,7 @@ fun BottomNavigationBar(navController: NavController) {
         items.forEach { screen ->
             BottomNavigationItem(
                 icon = { Icon(screen.icon, contentDescription = null) }, // Добавление иконки
-                label = { androidx.compose.material3.Text(screen.name, style = typography.h4) }, // Отображение названия
+                label = { androidx.compose.material3.Text(screen.name, style = typography.titleSmall) }, // Отображение названия
                 selected = false, // Логика выделения
                 onClick = { navController.navigate(screen.route) } // Логика навигации
             )
