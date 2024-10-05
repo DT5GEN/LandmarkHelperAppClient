@@ -1,40 +1,73 @@
 package com.dt5gen.landmarkhelperat2.ui.screens
 
-
-import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Text
+import androidx.compose.material.DropdownMenuItem
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.dt5gen.landmarkhelperat2.model.LandmarkDTO
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import com.dt5gen.landmarkhelperat2.viewmodel.LandmarkViewModel
 
-@SuppressLint("StateFlowValueCalledInComposition")
+
 @Composable
 fun LandmarkListScreen(viewModel: LandmarkViewModel) {
-    val landmarks = viewModel.landmarks.value
+    val landmarks by viewModel.landmarks.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
+    var selectedFilter by remember { mutableStateOf("По алфавиту") }
 
-    LazyColumn(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-        items(landmarks) { landmark ->
-            LandmarkItem(landmark)
+    Column {
+        FilterSection(onFilterChanged = { newFilter ->
+            selectedFilter = newFilter
+            // Здесь можно реализовать логику фильтрации через ViewModel
+            viewModel.filterLandmarks(newFilter)
+        })
+
+        if (isLoading) {
+            CircularProgressIndicator()
+        } else {
+            LazyColumn {
+                items(landmarks) { landmark ->
+                    Text(text = landmark.name)
+                }
+            }
         }
     }
 }
 
 @Composable
-fun LandmarkItem(landmark: LandmarkDTO) {
-    Column(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
-        Text(text = landmark.name, modifier = Modifier.padding(bottom = 4.dp))
-        Text(text = landmark.description)
+fun FilterSection(onFilterChanged: (String) -> Unit) {
+    var selectedFilter by remember { mutableStateOf("По алфавиту") }
+    var expanded by remember { mutableStateOf(true) }
+
+    DropdownMenu(
+        expanded = expanded,
+        onDismissRequest = { expanded = false }
+    ) {
+        DropdownMenuItem(onClick = {
+            selectedFilter = "По алфавиту"
+            onFilterChanged(selectedFilter)
+            expanded = false
+        }) {
+            Text(text = "По алфавиту")
+        }
+
+        DropdownMenuItem(onClick = {
+            selectedFilter = "По рейтингу"
+            onFilterChanged(selectedFilter)
+            expanded = false
+        }) {
+            Text(text = "По рейтингу")
+        }
     }
 }
 
-@Preview
-@Composable
-fun PreviewLandmarkItem() {
-    LandmarkItem(landmark = LandmarkDTO(1, "Eiffel Tower", "Famous tower in Paris", "1889-03-31", null, null, null))
-}
+
+
+
