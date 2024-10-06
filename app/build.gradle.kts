@@ -64,6 +64,7 @@ dependencies {
     implementation(libs.androidx.room.common)
     implementation(libs.androidx.room.runtime.android)
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.play.services.vision)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

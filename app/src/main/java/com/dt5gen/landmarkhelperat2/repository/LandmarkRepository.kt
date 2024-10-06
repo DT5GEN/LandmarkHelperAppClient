@@ -1,23 +1,26 @@
 package com.dt5gen.landmarkhelperat2.repository
 
 
+import android.app.Application
 import androidx.room.Room
 import com.dt5gen.landmarkhelperat2.model.toEntity
-import com.dt5gen.landmarkhelperat2.network.LandmarkApi
+import com.dt5gen.landmarkhelperat2.network.RetrofitInstance.api
 import com.dt5gen.landmarkhelperat2.room.LandmarkDao
 import com.dt5gen.landmarkhelperat2.room.LandmarkDatabase
 import com.dt5gen.landmarkhelperat2.room.LandmarkEntity
 
+class LandmarkRepository(application: Application) {
+    private val landmarkDao: LandmarkDao
 
+    init {
+        val db = Room.databaseBuilder(
+            application,
+            LandmarkDatabase::class.java, "landmark-database"
+        ).build()
 
-class LandmarkRepository(
-    private val api: LandmarkApi,
-    val landmarkDao: LandmarkDao = Room.databaseBuilder(
-        context.applicationContext,
-        LandmarkDatabase::class.java,
-        "landmark-database"
-    ).build().landmarkDao()
-) {
+        landmarkDao = db.landmarkDao()
+    }
+
     suspend fun getLandmarks(): List<LandmarkEntity> {
         val localData = landmarkDao.getAllLandmarks()
         if (localData.isNotEmpty()) {

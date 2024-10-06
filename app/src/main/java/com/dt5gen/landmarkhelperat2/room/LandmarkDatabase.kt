@@ -1,4 +1,3 @@
-
 package com.dt5gen.landmarkhelperat2.room
 
 import androidx.room.Database
